@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <h3 style="font-family: Lucida Sans Unicode; text-align: center;">Perlengkapan Peralatan & Snorkle</h3><br>
+</div>
+<div class="container">
+    <a href="/tambah_2/" class="btn btn-primary" role="button" style="font-family: Lucida Sans Unicode;">Tambah</a><br><br>
+    <table class="table table-bordered nomor" style="font-family: Lucida Sans Unicode; font-size: 18px;">
+      <thead>
+        <tr style="text-align: center;">
+          <th>No.</th>
+          <th>Nama Alat</th>
+          <th>Harga</th>
+          <th>Gambar</th>
+          <th class="col-4">Deskripsi</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody style="text-align: center;">
+        <tr>
+          {% for Peralatan in macam %}
+          <td></td>
+          <td>{{ Peralatan.nama_Alat }}</td>
+          <td>{{ Peralatan.harga }}</td>
+          <td style="text-align: center;">{% if Peralatan.gambar %}
+            <img style="height: 200px;" src="{{ Peralatan.gambar.url }}" alt="">
+          {% endif %}</td>
+          <td>{{ Peralatan.deskripsi }}</td>
+          <td>
+            <a class="btn btn-outline-dark" href="{% url 'update_2' Peralatan.pk %}">Edit</a>
+            <a class="btn btn-outline-dark"  href="#" role="button" onclick="hapusbuku('{{ Peralatan.pk }}', '{{ Peralatan.nama }}')">Hapus</a>
+          </td>
+        </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+<script>
+  function hapusbuku(id, nama) {
+    swal({
+      title: "Apakah Anda Yakin?",
+      text: "Setelah data " + nama + " dihapus, data tidak dapat dikembalPeralatan!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal("Berhasil!", "Data " + nama + " Berhasil Dihapus!", "success").then(function () {
+            window.location = "/peralatan/hapus_2/" + id;
+          });
+        }
+      });
+  }
+</script>
+{% endblock %}

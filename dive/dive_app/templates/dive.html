@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <h3 style="font-family: Lucida Sans Unicode; text-align: center;">Peta Sebaran Dive & Snorkle</h3><br>
+  <div id="map" style="width: 1500px; height: 450px; border-radius: 15px;"></div><br>
+</div>
+<div class="container">
+    <a href="/tambah_1/" class="btn btn-primary" role="button" style="font-family: Lucida Sans Unicode;">Tambah</a><br><br>
+    <table class="table table-striped nomor" style="font-family: Lucida Sans Unicode; font-size: 18px;;">
+      <thead>
+        <tr style="text-align: center;">
+          <th>No.</th>
+          <th>Nama Tempat</th>
+          <th>Garis Bujur</th>
+          <th>Garis Lintang</th>
+          <th>Gambar</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody style="text-align: center;">
+        <tr>
+          {% for Dive in selam %}
+          <td></td>
+          <td>{{ Dive.nama }}</td>
+          <td>{{ Dive.grs_bujur }}</td>
+          <td>{{ Dive.grs_lintang }}</td>
+          <td style="text-align: center;">{% if Dive.gambar %}
+            <img style="height: 200px;" src="{{ Dive.gambar.url }}" alt="">
+          {% endif %}</td>
+          <td>
+            <a class="btn btn-outline-dark" href="{% url 'update_1' Dive.pk %}">Edit</a>
+            <a class="btn btn-outline-dark"  href="#" role="button" onclick="hapusbuku('{{ Dive.pk }}', '{{ Dive.nama }}')">Hapus</a>
+          </td>
+        </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+<script>
+
+  var map = L.map('map').setView([-5.801879295825626, 106.45676754901723], 8);
+  
+  var imagery = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+  
+  var data_dive = JSON.parse("{{lokasi_json|escapejs}}");
+  console.log(data_dive);
+  
+  data_dive.map(e=>{
+    L.marker([e.fields.grs_lintang, e.fields.grs_bujur]).addTo(map)
+  })
+  
+  function hapusbuku(id, nama) {
+    swal({
+      title: "Apakah Anda Yakin?",
+      text: "Setelah data " + nama + " dihapus, data tidak dapat dikembalDive!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal("Berhasil!", "Data " + nama + " Berhasil Dihapus!", "success").then(function () {
+            window.location = "/dive/hapus_1/" + id;
+          });
+        }
+      });
+  }
+</script>
+{% endblock %}
